@@ -102,8 +102,7 @@ class AirCargoProblem(Problem):
                 for to in self.airports:
                     if fr != to:
                         for p in self.planes:
-                            precond_pos = [expr("At({}, {})".format(p, fr)),
-                                           ]
+                            precond_pos = [expr("At({}, {})".format(p, fr))]
                             precond_neg = []
                             effect_add = [expr("At({}, {})".format(p, to))]
                             effect_rem = [expr("At({}, {})".format(p, fr))]
@@ -298,7 +297,3 @@ def air_cargo_p3() -> AirCargoProblem:
             expr('At(C3, JFK)'),
             expr('At(C4, SFO)')]
     return AirCargoProblem(cargos, planes, airports, init, goal)
-
-
-if __name__ == "__main__":
-    print("asshole")

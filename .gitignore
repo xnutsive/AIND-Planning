@@ -3,6 +3,7 @@ __pycache__
 *.pyc
 *.zip
 *.json
+*.tags
 .idea/
 tests/.cache/v/cache/lastfailed
 .cache/v/cache/lastfailed
