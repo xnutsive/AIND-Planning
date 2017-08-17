@@ -67,7 +67,7 @@ class AirCargoProblem(Problem):
                                         expr(f"At({p}, {a})")]
                         precond_neg = [expr(f"In({cargo}, {p})") for cargo in self.cargos]
                         effect_add = [expr(f"In({c}, {p})")]
-                        effect_rem = []
+                        effect_rem = [expr(f"At({c}, {a})")]
                         loads.append(Action(expr(f"Load({c}, {p}, {a})"),
                                             [precond_pos, precond_neg],
                                             [effect_add, effect_rem]))
@@ -201,6 +201,9 @@ class AirCargoProblem(Problem):
         """
         # TODO implement (see Russell-Norvig Ed-3 10.2.3  or Russell-Norvig Ed-2 11.2)
         count = 0
+
+
+
         return count
 
 
@@ -233,14 +236,6 @@ def air_cargo_p1() -> AirCargoProblem:
 
 
 def air_cargo_p2() -> AirCargoProblem:
-
-    # Init(At(C1, SFO) ∧ At(C2, JFK) ∧ At(C3, ATL)
-    # 	∧ At(P1, SFO) ∧ At(P2, JFK) ∧ At(P3, ATL)
-    # 	∧ Cargo(C1) ∧ Cargo(C2) ∧ Cargo(C3)
-    # 	∧ Plane(P1) ∧ Plane(P2) ∧ Plane(P3)
-    # 	∧ Airport(JFK) ∧ Airport(SFO) ∧ Airport(ATL))
-    # Goal(At(C1, JFK) ∧ At(C2, SFO) ∧ At(C3, SFO))
-
     cargos = ['C1', 'C2', 'C3']
     planes = ['P1', 'P2', 'P3']
     airports = ['JFK', 'SFO', 'ATL']
@@ -268,7 +263,6 @@ def air_cargo_p2() -> AirCargoProblem:
 
 
 def air_cargo_p3() -> AirCargoProblem:
-
     cargos = ['C1', 'C2', 'C3', 'C4']
     planes = ['P1', 'P2']
     airports = ['JFK', 'SFO', 'ATL', 'ORD']
@@ -297,3 +291,14 @@ def air_cargo_p3() -> AirCargoProblem:
             expr('At(C3, JFK)'),
             expr('At(C4, SFO)')]
     return AirCargoProblem(cargos, planes, airports, init, goal)
+
+
+
+
+if __name__ == "__main__":
+    # Create an instance of p1
+    problem = air_cargo_p1()
+
+    print(problem.goal[0])
+
+    print(problem.state_map)
