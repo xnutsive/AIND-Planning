@@ -10,6 +10,7 @@ from lp_utils import (
 from my_planning_graph import PlanningGraph
 
 from functools import lru_cache
+from itertools import chain
 
 
 class AirCargoProblem(Problem):
@@ -199,17 +200,24 @@ class AirCargoProblem(Problem):
         conditions by ignoring the preconditions required for an action to be
         executed.
         """
-        # TODO implement (see Russell-Norvig Ed-3 10.2.3  or Russell-Norvig Ed-2 11.2)
-        count = 0
-
         kb = PropKB()
         kb.tell(decode_state(node.state, self.state_map).pos_sentence())
 
-        # for clause in self.goal:
-        #     if clause not in kb.clauses:
-        #         count += 1
+        count = 0
+        unmet_goals = [c for c in self.goal if c not in kb.clauses]
+        count += len(unmet_goals)
 
-        count += len([c for c in self.goal if c not in kb.clauses])
+        # FIXME This can be further optimized — iterate
+        # over actions recursively
+        for g in unmet_goals:
+            for a in self.actions_list:
+                if g in a.effect_add:
+                    for p in a.precond_pos:
+                        if p not in kb.clauses:
+                            count+= 1
+                            # one action prerequisite can only be counted
+                            # once to be admissable.
+                            break
 
         return count
 
@@ -305,7 +313,3 @@ def air_cargo_p3() -> AirCargoProblem:
 if __name__ == "__main__":
     # Create an instance of p1
     problem = air_cargo_p1()
-
-    print(problem.goal[0])
-
-    print(problem.state_map)
