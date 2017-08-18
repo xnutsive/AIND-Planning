@@ -66,7 +66,7 @@ class AirCargoProblem(Problem):
                     for a in self.airports:
                         precond_pos = [expr(f"At({c}, {a})"),
                                         expr(f"At({p}, {a})")]
-                        precond_neg = [expr(f"In({cargo}, {p})") for cargo in self.cargos]
+                        precond_neg = []
                         effect_add = [expr(f"In({c}, {p})")]
                         effect_rem = [expr(f"At({c}, {a})")]
                         loads.append(Action(expr(f"Load({c}, {p}, {a})"),
@@ -202,24 +202,23 @@ class AirCargoProblem(Problem):
         """
         kb = PropKB()
         kb.tell(decode_state(node.state, self.state_map).pos_sentence())
+        return len([c for c in self.goal if c not in kb.clauses])
 
-        count = 0
-        unmet_goals = [c for c in self.goal if c not in kb.clauses]
-        count += len(unmet_goals)
-
-        # FIXME This can be further optimized — iterate
-        # over actions recursively
-        for g in unmet_goals:
-            for a in self.actions_list:
-                if g in a.effect_add:
-                    for p in a.precond_pos:
-                        if p not in kb.clauses:
-                            count+= 1
-                            # one action prerequisite can only be counted
-                            # once to be admissable.
-                            break
-
-        return count
+        # count = 0
+        # unmet_goals = [c for c in self.goal if c not in kb.clauses]
+        # count += len(unmet_goals)
+        #
+        # # FIXME This can be further optimized — iterate
+        # # over actions recursively
+        # for g in unmet_goals:
+        #     for a in self.actions_list:
+        #         if g in a.effect_add:
+        #             for p in a.precond_pos:
+        #                 if p not in kb.clauses:
+        #                     count+= 1
+        #                     # one action prerequisite can only be counted
+        #                     # once to be admissable.
+        #                     break
 
 
 # Problem constructor shortcut funtions
